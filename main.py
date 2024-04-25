@@ -6,6 +6,7 @@ import telebot
 import webbrowser
 import requests
 #библиотека для погоды
+
 import json
 from telebot import types
 from telebot.types import InlineKeyboardButton
@@ -307,10 +308,19 @@ def callback_message(callback):
     elif callback.data == 'calendar':
         dates = [datetime.now()]
         markup = types.InlineKeyboardMarkup()
-        buttons = [InlineKeyboardButton(date.strftime('%d.%m'),callback_data=date.strftime('%d.%m')) for date in dates]
+        buttons = [InlineKeyboardButton(date.strftime('%d.%m.%Y'),callback_data=date.strftime('%d.%m.%Y')) for date in dates]
         for i in range(0, len(buttons), 3):
             markup.add(*buttons[i:i + 3])
-        bot.send_message(callback.message.chat.id,text="Календарь",reply_markup=markup)
+        markup.add(types.InlineKeyboardButton('Подтвердить бронирование', callback_data='yes'))
+        bot.send_message(callback.message.chat.id,text="Список свободных дат:",reply_markup=markup)
+
+    elif callback.data == 'yes':
+        markup = types.InlineKeyboardMarkup()
+        bot.send_message(callback.message.chat.id, f'Бронирование подтверждено, оставайтесь на месте машину привезут к вам в течении 5 мин', reply_markup=markup)
+
+
+
+
 
 
     elif callback.data == 'back':
